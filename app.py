@@ -85,22 +85,81 @@ if st.session_state.participant_id is None:
     st.title("Accent Similarity Study")
 
     st.markdown("""
-Focus only on accent similarity.
+## Instructions
+
+Welcome to the Accent Similarity Study.
+
+In each trial, you will hear:
+
+- **One reference recording** (this represents a specific accent)
+- **Two synthesized samples: Sample A and Sample B**
+
+Your task is to compare **each sample (A and B)** to the reference recording and rate:
+
+> How similar does this sample sound to the reference accent?
+
+You will rate **Sample A and Sample B separately**, on a 1–5 scale.
+
+---
+
+### Rating Scale
+
+1 = Very Different Accent  
+2 = Somewhat Different  
+3 = Moderately Similar  
+4 = Very Similar  
+5 = Almost Identical Accent  
+
+---
+
+### Important Guidelines
+
+Focus only on **accent similarity**.
 
 Ignore:
-- Speaker identity
-- Voice quality
-- Audio quality
-- Naturalness
-- Background noise
+- Speaker identity  
+- Voice quality  
+- Audio quality  
+- Naturalness  
+- Background noise  
+
+Some recordings may contain slight noise or reduced clarity.  
+Please focus specifically on pronunciation patterns rather than recording quality.
 
 Pay attention to:
-- Word/Phrase level Pronunciation
+- Word-level pronunciation  
+- Phrase-level pronunciation  
+- Vowel realization  
+- Consonant articulation  
 
-Scale:
-1 = Very Different  
-5 = Very Similar
+---
+
+### Additional Information
+
+- Estimated completion time: **40–50 minutes**
+- It is recommended to complete the study in **one sitting**
+- You may replay audio as many times as needed
+- Headphones are strongly recommended
+
+When you are ready, enter your name and click **Start / Resume**.
 """)
+#     st.markdown("""
+# Focus only on accent similarity.
+
+# Ignore:
+# - Speaker identity
+# - Voice quality
+# - Audio quality
+# - Naturalness
+# - Background noise
+
+# Pay attention to:
+# - Word/Phrase level Pronunciation
+
+# Scale:
+# 1 = Very Different  
+# 5 = Very Similar
+# """)
 
     name_input = st.text_input("Enter your name:")
 
