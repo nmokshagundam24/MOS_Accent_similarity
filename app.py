@@ -186,13 +186,17 @@ for anchor_label, anchor_path in anchors:
 
 if st.button("Next"):
 
+    # Convert ratings to native Python int
+    clean_ratings = {
+        k: int(v) for k, v in ratings.items()
+    }
     row = [
-        st.session_state.participant_id,
-        st.session_state.participant_id.split("_")[0],
-        trial_pos,
-        trial["trial_id"],
-        trial["transcript"],
-        json.dumps(ratings),
+        str(st.session_state.participant_id),
+        str(st.session_state.participant_id.split("_")[0]),
+        int(trial_pos),
+        str(trial["trial_id"]),
+        str(trial["transcript"]),
+        json.dumps(clean_ratings),
         datetime.now().isoformat(),
         False
     ]
@@ -201,3 +205,4 @@ if st.button("Next"):
 
     st.session_state.trial_index += 1
     st.rerun()
+    save_response(row)
