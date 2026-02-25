@@ -28,7 +28,8 @@ df = pd.read_csv(os.path.join(BASE_DIR, "trials.csv"))
 def connect_sheet():
     credentials = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
-        scopes=["https://www.googleapis.com/auth/spreadsheets"]
+        scopes=["https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"]
     )
     client = gspread.authorize(credentials)
     return client.open(SPREADSHEET_NAME).worksheet("responses")
