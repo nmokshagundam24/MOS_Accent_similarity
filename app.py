@@ -89,16 +89,19 @@ if st.session_state.participant_id is None:
 
 Welcome to the Accent Similarity Study.
 
-In each trial, you will hear:
+There are **50 total trials** in this study.
 
-- **One reference recording** (this represents a specific accent)
+In each trial, you will see the **transcript of the sentence** on the screen.  
+You will then hear:
+
+- **One reference recording** (representing a particular accent)
 - **Two synthesized samples: Sample A and Sample B**
 
 Your task is to compare **each sample (A and B)** to the reference recording and rate:
 
 > How similar does this sample sound to the reference accent?
 
-You will rate **Sample A and Sample B separately**, on a 1–5 scale.
+You will rate **Sample A and Sample B separately**, using a 1–5 scale.
 
 ---
 
@@ -123,14 +126,12 @@ Ignore:
 - Naturalness  
 - Background noise  
 
-Some recordings may contain slight noise or reduced clarity.  
+Many recordings contain slight noise or reduced clarity.  
 Please focus specifically on pronunciation patterns rather than recording quality.
 
 Pay attention to:
 - Word-level pronunciation  
 - Phrase-level pronunciation  
-- Vowel realization  
-- Consonant articulation  
 
 ---
 
@@ -140,6 +141,8 @@ Pay attention to:
 - It is recommended to complete the study in **one sitting**
 - You may replay audio as many times as needed
 - Headphones are strongly recommended
+
+If you accidentally refresh the page, simply enter your name again and you will **resume from where you left off**.
 
 When you are ready, enter your name and click **Start / Resume**.
 """)
