@@ -17,6 +17,32 @@ TOTAL_TRIALS = 50
 SPREADSHEET_NAME = "Accent_Similarity_MOS_Data"
 
 st.set_page_config(page_title="Accent Similarity Study", layout="centered")
+st.markdown("""
+<style>
+
+/* Disabled button - Grey */
+div.stButton > button:disabled {
+    background-color: #808080 !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Enabled button - Green */
+div.stButton > button:not(:disabled) {
+    background-color: #16a34a !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Slightly larger button */
+div.stButton > button {
+    height: 3em;
+    width: 150px;
+    font-weight: 600;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 df = pd.read_csv(os.path.join(BASE_DIR, "trials.csv"))
@@ -239,19 +265,33 @@ for anchor_label, anchor_path in anchors:
             st.audio(sample_path)
 
             rating = st.radio(
-                "Accent Similarity Rating",
+                f"How similar is {sample_label} to the {anchor_label}?",
                 [1,2,3,4,5],
+                index=None,
                 key=f"{anchor_label}_{sample_label}_{trial_pos}"
+            )
+
+            st.markdown(
+                """<div style="display:flex; justify-content:space-between; font-size:14px; margin-top:-10px;">
+                <span>Very Different</span>
+                <span>Very Similar</span>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
             ratings[f"{anchor_label}_{sample_label}"] = rating
 
-if st.button("Next"):
+# Check that all ratings are selected
+all_rated = all(v is not None for v in ratings.values())
 
-    # Convert ratings to native Python int
-    clean_ratings = {
-        k: int(v) for k, v in ratings.items()
-    }
+# Single Next button (grey until complete, green when ready)
+next_button = st.button("Next", disabled=not all_rated)
+
+if next_button:
+
+    clean_ratings = {k: int(v) for k, v in ratings.items()}
+
     row = [
         str(st.session_state.participant_id),
         str(st.session_state.participant_id.split("_")[0]),
@@ -267,4 +307,3 @@ if st.button("Next"):
 
     st.session_state.trial_index += 1
     st.rerun()
-    save_response(row)
