@@ -302,7 +302,7 @@ next_button = st.button("Next", disabled=not all_rated)
 
 if next_button:
 
-    clean_ratings = {k: int(v) for k, v in ratings.items()}
+    clean_ratings = ratings
 
     row = [
         str(st.session_state.participant_id),
