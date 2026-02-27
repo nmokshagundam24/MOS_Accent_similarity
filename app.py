@@ -163,8 +163,8 @@ Pay attention to:
 
 ### Additional Information
 
-- Estimated completion time: **40–50 minutes**
-- It is recommended to complete the study in **one sitting**
+- Estimated completion time: **40–50 minutes** (in one sitting)
+- Recommended to take it in multiple sittings; where each sitting: 10-15 trials. 
 - You may replay audio as many times as needed
 - Headphones are strongly recommended
 
@@ -264,13 +264,24 @@ for anchor_label, anchor_path in anchors:
             st.markdown(f"#### {sample_label}")
             st.audio(sample_path)
 
+            options = [
+                (1, "1  —  Very Different"),
+                (2, "2"),
+                (3, "3"),
+                (4, "4"),
+                (5, "5  —  Very Similar"),
+            ]
+
             rating = st.radio(
                 f"How similar is {sample_label} to the {anchor_label}?",
-                [1,2,3,4,5],
-                horizontal=False,
+                options,
+                format_func=lambda x: x[1],
                 index=None,
                 key=f"{anchor_label}_{sample_label}_{trial_pos}"
             )
+
+            # Store only numeric value
+            ratings[f"{anchor_label}_{sample_label}"] = rating[0] if rating else None
 
             st.markdown(
                 """<div style="display:flex; justify-content:space-between; font-size:14px; margin-top:-10px;">
