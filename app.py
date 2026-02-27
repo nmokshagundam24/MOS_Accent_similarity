@@ -267,6 +267,7 @@ for anchor_label, anchor_path in anchors:
             rating = st.radio(
                 f"How similar is {sample_label} to the {anchor_label}?",
                 [1,2,3,4,5],
+                horizontal=False,
                 index=None,
                 key=f"{anchor_label}_{sample_label}_{trial_pos}"
             )
