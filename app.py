@@ -283,14 +283,14 @@ for anchor_label, anchor_path in anchors:
             # Store only numeric value
             ratings[f"{anchor_label}_{sample_label}"] = rating[0] if rating else None
 
-            st.markdown(
-                """<div style="display:flex; justify-content:space-between; font-size:14px; margin-top:-10px;">
-                <span>Very Different</span>
-                <span>Very Similar</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            # st.markdown(
+            #     """<div style="display:flex; justify-content:space-between; font-size:14px; margin-top:-10px;">
+            #     <span>Very Different</span>
+            #     <span>Very Similar</span>
+            #     </div>
+            #     """,
+            #     unsafe_allow_html=True
+            # )
 
             ratings[f"{anchor_label}_{sample_label}"] = rating
 
