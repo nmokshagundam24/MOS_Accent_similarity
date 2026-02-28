@@ -283,16 +283,7 @@ for anchor_label, anchor_path in anchors:
             # Store only numeric value
             ratings[f"{anchor_label}_{sample_label}"] = rating[0] if rating else None
 
-            # st.markdown(
-            #     """<div style="display:flex; justify-content:space-between; font-size:14px; margin-top:-10px;">
-            #     <span>Very Different</span>
-            #     <span>Very Similar</span>
-            #     </div>
-            #     """,
-            #     unsafe_allow_html=True
-            # )
-
-            ratings[f"{anchor_label}_{sample_label}"] = rating
+            # ratings[f"{anchor_label}_{sample_label}"] = rating
 
 # Check that all ratings are selected
 all_rated = all(v is not None for v in ratings.values())
@@ -314,8 +305,10 @@ if next_button:
         datetime.now().isoformat(),
         False
     ]
-
-    save_response(row)
-
-    st.session_state.trial_index += 1
-    st.rerun()
+    
+    try:
+        save_response(row)
+        st.session_state.trial_index += 1
+        st.rerun()
+    except Exception as e:
+        st.error("Temporary save error. Please click Next again.")
