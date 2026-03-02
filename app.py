@@ -5,6 +5,7 @@ import os
 import json
 import hashlib
 from datetime import datetime
+import time
 
 import gspread
 from google.oauth2.service_account import Credentials
@@ -60,7 +61,12 @@ def connect_sheet():
     client = gspread.authorize(credentials)
     return client.open(SPREADSHEET_NAME).worksheet("responses")
 
-sheet = connect_sheet()
+# sheet = connect_sheet()
+@st.cache_resource
+def get_sheet():
+    return connect_sheet()
+
+sheet = get_sheet()
 
 # ==============================
 # HELPER FUNCTIONS
@@ -71,23 +77,56 @@ def generate_participant_id(name):
     hash_id = hashlib.md5(clean_name.encode()).hexdigest()[:6]
     return f"{clean_name}_{hash_id}"
 
-def load_progress(pid):
-    records = sheet.get_all_records()
-    user_rows = [r for r in records if r["participant_id"] == pid]
+# def load_progress(pid):
+#     records = sheet.get_all_records()
+#     user_rows = [r for r in records if r["participant_id"] == pid]
 
-    if not user_rows:
+#     if not user_rows:
+#         return None
+
+#     last_trial = max(r["trial_index"] for r in user_rows)
+#     completed = any(r["completed"] == True for r in user_rows)
+
+#     return {
+#         "trial_index": last_trial + 1,
+#         "completed": completed
+#     }
+
+def load_progress(pid):
+    try:
+        matches = sheet.findall(pid)
+
+        if not matches:
+            return None
+
+        trial_indices = []
+        for cell in matches:
+            row = sheet.row_values(cell.row)
+            if len(row) > 2:
+                try:
+                    trial_indices.append(int(row[2]))
+                except:
+                    pass
+
+        if not trial_indices:
+            return None
+
+        return {
+            "trial_index": max(trial_indices) + 1,
+            "completed": False
+        }
+
+    except Exception:
         return None
 
-    last_trial = max(r["trial_index"] for r in user_rows)
-    completed = any(r["completed"] == True for r in user_rows)
-
-    return {
-        "trial_index": last_trial + 1,
-        "completed": completed
-    }
-
-def save_response(row):
-    sheet.append_row(row)
+def save_response(row, retries=5):
+    for attempt in range(retries):
+        try:
+            sheet.append_row(row, value_input_option="USER_ENTERED")
+            return True
+        except Exception:
+            time.sleep(1)
+    return False
 
 # ==============================
 # SESSION INIT
@@ -291,6 +330,28 @@ all_rated = all(v is not None for v in ratings.values())
 # Single Next button (grey until complete, green when ready)
 next_button = st.button("Next", disabled=not all_rated)
 
+# if next_button:
+
+#     clean_ratings = ratings
+
+#     row = [
+#         str(st.session_state.participant_id),
+#         str(st.session_state.participant_id.split("_")[0]),
+#         int(trial_pos),
+#         str(trial["trial_id"]),
+#         str(trial["transcript"]),
+#         json.dumps(clean_ratings),
+#         datetime.now().isoformat(),
+#         False
+#     ]
+    
+#     try:
+#         save_response(row)
+#         st.session_state.trial_index += 1
+#         st.rerun()
+#     except Exception as e:
+#         st.error("Temporary save error. Please click Next again.")
+
 if next_button:
 
     clean_ratings = ratings
@@ -305,10 +366,11 @@ if next_button:
         datetime.now().isoformat(),
         False
     ]
-    
-    try:
-        save_response(row)
+
+    success = save_response(row)
+
+    if success:
         st.session_state.trial_index += 1
         st.rerun()
-    except Exception as e:
-        st.error("Temporary save error. Please click Next again.")
+    else:
+        st.error("Temporary save issue. Please click Next again.")
